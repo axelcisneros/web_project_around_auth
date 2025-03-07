@@ -1,0 +1,257 @@
+.main {
+  max-width: 880px;
+  margin: auto;
+  padding-top: 40px;
+}
+
+.main__profile {
+  display: grid;
+  grid-template-columns: 120px repeat(3, 1fr);
+  grid-template-rows: 120px;
+  grid-gap: 30px;
+  padding-bottom: 50px;
+}
+
+.main__content-image {
+  display: inline-block;
+  position: relative;
+  max-width: 120px;
+}
+
+.main__profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+}
+
+.main__content-paragraph {
+  max-width: 450px;
+  display: grid;
+  grid-column: 2 / 4;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  align-items: center;
+  grid-row-gap: 10px;
+  line-height: normal;
+}
+
+.main__paragraph {
+  max-width: 415px;
+}
+
+.main__paragraph_name {
+  grid-column: 1 / 4;
+  margin: 0;
+  font-size: 38px;
+  line-height: 48px;
+  font-weight: 600;
+  padding-top: 22px;
+}
+
+.main__paragraph_job {
+  grid-column: 1 / 5;
+  grid-row: 2;
+  margin: 0;
+  font-size: 18px;
+  padding-bottom: 21px;
+}
+
+.main__button {
+  border: 2px inset;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  padding: 0;
+  cursor: pointer;
+}
+
+.main__button:hover {
+  opacity: 0.5;
+}
+
+.main__button_edit {
+  width: 24px;
+  height: 24px;
+  align-self: end;
+  margin-bottom: 7px;
+}
+
+.main__button_add {
+  width: 150px;
+  height: 50px;
+  align-self: end;
+}
+
+.main__button_img {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.main__button_img:hover {
+  opacity: 0.9;
+}
+
+.main__gallery {
+  max-width: 880px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 17px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.main__gallery-card {
+  position: relative;
+  max-width: 290px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px;
+}
+
+.main__gallery-image {
+  width: 282px;
+  height: 282px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.main__gallery-image:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.main__gallery-content {
+  display: flex;
+  justify-content: space-between;
+  max-width: 250px;
+  margin: 20px auto;
+}
+
+.main__gallery-paragraph {
+  max-width: 230px;
+  height: 25px;
+  font-family: "Inter-Black", sans-serif;
+  font-size: 24px;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.main__gallery-paragraph_text_overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.main__button_trash {
+  border: none;
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: url(../images/trash.svg) center no-repeat;
+}
+
+.main__button_like {
+  border: none;
+  width: 25px;
+  height: 19px;
+  align-self: flex-end;
+  background: url(../images/Vector-like.svg) center no-repeat;
+}
+
+.main__button_like_active {
+  background-image: url(../images/Vector-like-active.svg);
+}
+
+@media screen and (min-width: 320px) and (max-width: 584px) {
+  .main__profile {
+    max-width: 290px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 120px repeat(2, 50px);
+    justify-items: center;
+    margin: auto;
+    grid-row-gap: 30px;
+    padding-bottom: 30px;
+  }
+
+  .main__content-paragraph {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    grid-template-rows: repeat(2, 20px);
+  }
+
+  .main__paragraph_name {
+    font-size: 22px;
+    padding: 0;
+    line-height: normal;
+  }
+
+  .main__paragraph_job {
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .main__button_edit {
+    width: 22px;
+    height: 22px;
+    margin: 0 0 0 16px;
+    align-self: center;
+  }
+
+  .main__button_add {
+    width: 100%;
+    grid-row: 3;
+  }
+
+  .main__gallery {
+    max-width: 290px;
+    margin: auto;
+    gap: 20px;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 585px) and (max-width: 880px) {
+  .main__profile {
+    max-width: 700px;
+    margin: auto;
+    padding-bottom: 40px;
+  }
+
+  .main__paragraph_name {
+    font-size: 30px;
+    line-height: normal;
+    padding-top: 0;
+  }
+
+  .main__paragraph_job {
+    font-size: 14px;
+  }
+
+  .main__button_edit {
+    width: 22px;
+    height: 22px;
+    margin: 0 0 0 16px;
+    align-self: center;
+  }
+
+  .main__button_add {
+    width: 100%;
+  }
+
+  .main__gallery {
+    max-width: 600px;
+    margin: auto;
+    gap: 20px;
+  }
+}

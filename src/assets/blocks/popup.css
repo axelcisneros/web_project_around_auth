@@ -1,0 +1,208 @@
+.popup {
+  width: 890px;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -50%);
+  position: fixed;
+  align-content: center;
+  z-index: 1;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.popup__button {
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 100%;
+  background-color: #000;
+  padding: 10px;
+  margin-bottom: 40px;
+}
+
+/* Estilo cuando el botón está deshabilitado */
+.popup__button:disabled {
+  pointer-events: none; /* Desactiva los eventos del mouse */
+  opacity: 0.6; /* Reduce la opacidad para indicar que está deshabilitado */
+}
+
+/* Evita el estado hover cuando el botón está deshabilitado */
+.popup__button:not(:disabled):hover {
+  opacity: 0.5;
+}
+
+
+.popup__button_close {
+  background: url(../images/Close-Icon.svg) center no-repeat;
+  width: 50px;
+  height: 50px;
+  font-size: 0;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.popup__form {
+  margin: 0 auto;
+  max-width: 430px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.popup__trash {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 390px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.popup__images {
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.popup__content-image {
+  max-width: fit-content;
+  margin: auto;
+}
+
+.popup__image {
+  width: 400px;
+  height: 400px;
+}
+
+.popup__paragraph-content {
+  margin: auto;
+  width: 400px;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  color: #fff;
+}
+
+.popup__subtitle {
+  font-family: "Inter-Black", sans-serif;
+  font-size: 24px;
+  width: 350px;
+  margin: 0;
+  padding: 10px 0;
+  align-self: center;
+}
+
+.popup__content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 360px;
+  margin: auto;
+  border: 0;
+  padding: 0 10px;
+}
+
+.popup__field_top {
+  margin-top: 40px;
+}
+
+.popup__input {
+  width: 360px;
+  border: 0;
+  border-bottom: 1px solid #000;
+}
+
+.popup__button_save {
+  width: 100%;
+  background-color: #000;
+  padding: 10px;
+  margin-bottom: 40px;
+}
+
+.popup__button_trash {
+  width: 90%;
+  background-color: #000;
+  padding: 10px;
+  margin: 40px auto 40px;
+}
+
+.popup__button_disabled {
+  background-color: #c4c4c4;
+  cursor: default;
+}
+
+.popup__input_type_error {
+  border-bottom: 1px solid #f00;
+}
+
+.popup__error_visible {
+  color: #f00;
+}
+
+@media screen and (min-width: 320px) and (max-width: 585px) {
+  .popup__trash {
+    width: 300px;
+  }
+
+  .popup__image {
+    width: 300px;
+    height: 280px;
+  }
+
+  .popup__paragraph-content {
+    width: 300px;
+  }
+
+  .popup__form {
+    max-width: 300px;
+  }
+
+  .popup__subtitle {
+    width: 240px;
+    margin: 0 22px;
+  }
+
+  .popup__content {
+    width: 240px;
+  }
+
+  .popup__input {
+    width: 240px;
+  }
+}
+
+@media screen and (min-width: 585px) and (max-width: 880px) {
+  .popup__trash {
+    width: 300px;
+  }
+
+  .popup__image {
+    width: 300px;
+    height: 280px;
+  }
+
+  .popup__paragraph-content {
+    width: 300px;
+  }
+
+  .popup__form {
+    max-width: 400px;
+  }
+
+  .popup__subtitle {
+    width: 240px;
+    margin: 0 22px;
+  }
+
+  .popup__content {
+    width: 240px;
+  }
+
+  .popup__input {
+    width: 240px;
+  }
+}
