@@ -1,9 +1,9 @@
-import logo from '@assets/images/Vector.svg';
+import NavBar from './NavBar/NavBar';
 
 function Header() {
   return (
     <header className="header">
-        <img src={logo} alt="logo-page" className="header__image" />
+      <NavBar />
     </header>
   );
 }

@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import Header from './Header/Header.jsx';
 import Main from './Main/Main.jsx';
 import Footer from './Footer/Footer.jsx';
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.jsx";
+import Login from './Login/Login.jsx';
+import Register from './Register/Register.jsx';
 import api from '@utils/api.js';
+import * as auth from '@utils/auth.js';
+import { setToken, getToken } from '@utils/token.js';
 import CurrentUserContext from '@contexts/CurrentUserContext.js';
 
 
@@ -12,6 +18,12 @@ function App() {
   const [ isLoading, setIsLoading] = useState(false);
   const [cards, setCards] = useState([]);
   const [disabled, setDisabled] = useState(true);
+  const [userData, setUserData] = useState({ username: "", email: "" });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
 
   function handleOpenPopup(popup) {
     setPopup(popup);
@@ -39,9 +51,26 @@ function App() {
         console.error(error);
       }
     };
+        const jwt = getToken();
+      
+        if (!jwt) {
+          return;
+        }
+        
+        // Llama a la función, pasándole el JWT.
+        auth
+          .getUserInfoAuth(jwt)
+          .then(({ username, email }) => {
+            // si la respuesta es exitosa, inicia la sesión del usuario, guarda sus
+            // datos en el estado y lo dirige a /my-perfil.
+            setIsLoggedIn(true);
+            setUserData({ username, email });
+          })
+          .catch(console.error);
   
     getUserData();
     getInitialCardsData();
+    
   }, []);
 
   async function handleCardLike(card) {
@@ -51,6 +80,42 @@ function App() {
       setCards((state) => state.map((currentCard) => currentCard._id === card._id ? newCard : currentCard));
     }).catch((error) => console.error(error));
   }
+
+    const handleRegistration = ({
+      email,
+      password
+    }) => {
+        auth.register( password, email)
+         .then(() => {
+          navigate("/login");
+          })
+          .catch(console.error);
+    };
+
+      const handleLogin = ({ username, password }) => {
+        if (!username || !password) {
+          return;
+        }
+    
+        auth
+          .authorize(username, password)
+          .then((data) => {
+            // Verifica que se incluyó un jwt antes de iniciar la sesión del usuario.
+            if (data.jwt) {
+              setToken(data.jwt);      // guardar el jwt en localStorage
+              setUserData(data.user);  // guardar los datos de usuario en el estado
+              setIsLoggedIn(true);     // inicia la sesión del usuario
+              navigate("/my-perfil");      // enviarlo a /my-perfil
+                      // Después de iniciar sesión, en lugar de navegar todo el tiempo a /my-perfil,
+            // navega a la ubicación que se almacena en state. Si
+            // no hay ubicación almacenada, por defecto
+            // redirigimos a /my-perfil.
+            const redirectPath = location.state?.from?.pathname || "/my-perfil";
+            navigate(redirectPath);
+            }
+          })
+          .catch(console.error);
+      };
 
   async function handleCardDelete(cardId) {
     try {
@@ -109,17 +174,40 @@ function App() {
   
 
   return (
-    <CurrentUserContext.Provider value={{currentUser, handleUpdateUser, handleUpdateAvatar, handleAddPlaceSubmit, isLoading, disabled, setDisabled}}>
+    <CurrentUserContext.Provider value={{
+      currentUser,
+      handleUpdateUser,
+      handleUpdateAvatar,
+      handleAddPlaceSubmit,
+      isLoading, disabled,
+      setDisabled,
+      userData,
+      setIsLoggedIn,
+      isLoggedIn
+      }}>
       <div className='page'>
         <Header />
-        <Main
-        onOpenPopup={handleOpenPopup}
-        onClosePopup={handleClosePopup}
-        popup={popup} 
-        cards={cards}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}/>
-        <Footer />
+        <Routes>
+          <Route
+          path="/my-perfil"
+          element={
+          <ProtectedRoute>
+            <Main onOpenPopup={handleOpenPopup} onClosePopup={handleClosePopup} popup={popup} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>
+            <Footer />          
+          </ProtectedRoute>
+        }/>
+        <Route path="/login" element={
+          <ProtectedRoute anonymous>
+              <Login handleLogin={handleLogin} />
+          </ProtectedRoute>
+        } />
+        <Route path="/register" element={
+          <ProtectedRoute anonymous>
+              <Register handleRegistration={handleRegistration} />
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={ isLoggedIn ? (<Navigate to="/my-perfil" replace/>) : (<Navigate to="/login" replace/>)}/>
+        </Routes>
       </div>
     </CurrentUserContext.Provider>
   )
