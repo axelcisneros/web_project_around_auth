@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import errorMessages from "@utils/errorMessages";
+import Popup from "../Main/components/Popup/Popup";
+import InfoTooltip from "../InfoTooltip/InfoTooltip";
+import CurrentUserContext from '@contexts/CurrentUserContext.js';
 
 const Login = ({ handleLogin }) => {
   const [disabled, setDisabled] = useState(true);
@@ -22,6 +25,12 @@ const Login = ({ handleLogin }) => {
     },
     mode: "onChange",
   });
+
+    const { popup, handleOpenPopup, handleClosePopup, messagePopup } = useContext(CurrentUserContext);
+  
+      function handleloginSubmit() {
+          handleOpenPopup({ children: <InfoTooltip messages={messagePopup}/> });
+      }
 
   useEffect(() => {
     trigger(); // Ejecutar validaciones iniciales al cargar
@@ -80,6 +89,7 @@ const Login = ({ handleLogin }) => {
   };
 
   const onSubmit = (data) => {
+    handleloginSubmit();
     handleLogin(data); // Procesar inicio de sesión
   };
 
@@ -153,6 +163,11 @@ const Login = ({ handleLogin }) => {
           Regístrate aquí
         </Link>
       </div>
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+          </Popup>
+        )}
     </div>
   );
 };

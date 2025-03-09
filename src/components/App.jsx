@@ -10,6 +10,9 @@ import api from '@utils/api.js';
 import * as auth from '@utils/auth.js';
 import { setToken, getToken } from '@utils/token.js';
 import CurrentUserContext from '@contexts/CurrentUserContext.js';
+import trueImg from '@assets/images/trueImg.svg';
+import falseImg from '@assets/images/falseImg.svg'; 
+import messages from '@utils/messages.js';
 
 
 function App() {
@@ -20,6 +23,7 @@ function App() {
   const [disabled, setDisabled] = useState(true);
   const [userData, setUserData] = useState({ username: "", email: "" });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [messagePopup, setMessagePopup] = useState({message: "", link: "", linkalt: ""});
 
   const navigate = useNavigate();
 
@@ -87,18 +91,19 @@ function App() {
     }) => {
         auth.register( password, email)
          .then(() => {
+          setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
           navigate("/login");
           })
-          .catch(console.error);
+          .catch(() => {console.error; setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse});});
     };
 
-      const handleLogin = ({ username, password }) => {
-        if (!username || !password) {
+      const handleLogin = ({ email, password }) => {
+        if (!email || !password) {
           return;
         }
     
         auth
-          .authorize(username, password)
+          .authorize(email, password)
           .then((data) => {
             // Verifica que se incluyó un jwt antes de iniciar la sesión del usuario.
             if (data.jwt) {
@@ -106,15 +111,16 @@ function App() {
               setUserData(data.user);  // guardar los datos de usuario en el estado
               setIsLoggedIn(true);     // inicia la sesión del usuario
               navigate("/my-perfil");      // enviarlo a /my-perfil
-                      // Después de iniciar sesión, en lugar de navegar todo el tiempo a /my-perfil,
+             // Después de iniciar sesión, en lugar de navegar todo el tiempo a /my-perfil,
             // navega a la ubicación que se almacena en state. Si
             // no hay ubicación almacenada, por defecto
             // redirigimos a /my-perfil.
             const redirectPath = location.state?.from?.pathname || "/my-perfil";
+            setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
             navigate(redirectPath);
             }
           })
-          .catch(console.error);
+          .catch(() => {console.error; setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse});});
       };
 
   async function handleCardDelete(cardId) {
@@ -183,7 +189,11 @@ function App() {
       setDisabled,
       userData,
       setIsLoggedIn,
-      isLoggedIn
+      isLoggedIn,
+      popup,
+      handleOpenPopup,
+      handleClosePopup,
+      messagePopup,
       }}>
       <div className='page'>
         <Header />

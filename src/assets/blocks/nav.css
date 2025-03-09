@@ -33,3 +33,9 @@
     background: none;
     cursor: pointer;
   }
+
+  @media screen and (min-width: 320px) and (max-width: 584px) {
+    .nav__logo img {
+      max-width: 130px;
+    }
+  }

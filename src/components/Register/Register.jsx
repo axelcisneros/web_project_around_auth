@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import errorMessages from "@utils/errorMessages";
+import Popup from "../Main/components/Popup/Popup";
+import InfoTooltip from "../InfoTooltip/InfoTooltip";
+import CurrentUserContext from '@contexts/CurrentUserContext.js';
 
 const Register = ({ handleRegistration }) => {
   const [disabled, setDisabled] = useState(true);
@@ -21,6 +24,12 @@ const Register = ({ handleRegistration }) => {
     },
     mode: "onChange",
   });
+
+  const { popup, handleOpenPopup, handleClosePopup, messagePopup } = useContext(CurrentUserContext);
+
+    function handleCardClick() {
+        handleOpenPopup({ children: <InfoTooltip messages={messagePopup}/> });
+    }
 
   useEffect(() => {
     trigger();
@@ -77,6 +86,7 @@ const Register = ({ handleRegistration }) => {
   };
 
   const onSubmit = (data) => {
+    handleCardClick();
     handleRegistration(data);
   };
 
@@ -150,6 +160,11 @@ const Register = ({ handleRegistration }) => {
           Inicia sesión aquí
         </Link>
       </div>
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+          </Popup>
+        )}
     </div>
   );
 };

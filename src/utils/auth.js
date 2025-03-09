@@ -2,26 +2,26 @@ export const BASE_URL = "https://se-register-api.en.tripleten-services.com/v1";
 
 // La función registrada acepta los datos necesarios como argumentos, 
 // y envía una solicitud POST al endpoint dado.
-export const register = async (username, password, email) => {
+export const register = async (password, email) => {
   const res = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, email }),
+        body: JSON.stringify({ password, email }),
     });
     return await (res.ok ? res.json() : Promise.reject(`Error: ${res.status}`));
 };
 
-export const authorize = async (identifier, password) => {
+export const authorize = async (email, password) => {
   const res = await fetch(`${BASE_URL}/signin`, {
         method: "POST",
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ identifier, password }),
+        body: JSON.stringify({ email, password }),
     });
     return await (res.ok ? res.json() : Promise.reject(`Error: ${res.status}`));
 }
