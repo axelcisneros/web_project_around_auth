@@ -43,14 +43,14 @@ function NavBar() {
       <ul className="nav__links">
         <li>
           <NavLink to="/my-profile" className="nav__link">
-          {userData.email}
+            {isLoggedIn ? userData.email : ""}
           </NavLink>
         </li>
         <li>
           <button onClick={signOut} className={`nav__link nav__button ${isLoggedIn ? "" : "login__link_visible" }`}>Cerrar sesión</button>
         </li>
         <li>
-          <button onClick={handleLogin} className={`nav__link nav__button`}>{isLoginPage ? "Regístrate" : "Iniciar sesión"}</button>
+          <button onClick={handleLogin} className={`nav__link nav__button ${isLoggedIn ? "login__link_visible" : "" }`}>{isLoginPage ? "Regístrate" : "Iniciar sesión"}</button>
         </li>
       </ul>
     </nav>

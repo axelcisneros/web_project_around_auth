@@ -2,8 +2,9 @@ const TOKEN_KEY = "jwt";
 
 // setToken acepta el token como argumento y lo agrega a 
 // localStorage con la clave TOKEN_KEY.
-export const setToken = (token) =>
+export const setToken = (token) => {
   localStorage.setItem(TOKEN_KEY, token);
+}
 
 // getToken recupera y devuelve el valor asociado a
 // TOKEN_KEY desde localStorage.

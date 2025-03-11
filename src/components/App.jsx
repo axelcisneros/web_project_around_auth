@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation, data } from "react-router-dom";
 import Header from './Header/Header.jsx';
 import Main from './Main/Main.jsx';
 import Footer from './Footer/Footer.jsx';
@@ -18,16 +18,16 @@ import messages from '@utils/messages.js';
 function App() {
   const [popup, setPopup] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
-  const [ isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [cards, setCards] = useState([]);
   const [disabled, setDisabled] = useState(true);
-  const [userData, setUserData] = useState({ username: "", email: "" });
+  const [userData, setUserData] = useState({ email: ""});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [messagePopup, setMessagePopup] = useState({message: "", link: "", linkalt: ""});
 
   const navigate = useNavigate();
 
-  const location = useLocation();
+  const location = useLocation();  
 
   function handleOpenPopup(popup) {
     setPopup(popup);
@@ -38,6 +38,21 @@ function App() {
   }
 
   useEffect(() => {
+    const getUserInfoAuth = async () => {
+      const jwt = getToken();
+      if (!jwt) {
+      return;
+      }
+      
+      try {
+      const { data } = await auth.getUserInfoAuth(jwt);
+      setUserData({ email: data.email });
+      setIsLoggedIn(true);
+      } catch (error) {
+      console.error(error);
+      }
+    };
+
     const getUserData = async () => {
       try {
         const data = await api.getUserInfo();
@@ -55,27 +70,12 @@ function App() {
         console.error(error);
       }
     };
-        const jwt = getToken();
-      
-        if (!jwt) {
-          return;
-        }
-        
-        // Llama a la función, pasándole el JWT.
-        auth
-          .getUserInfoAuth(jwt)
-          .then(({ username, email }) => {
-            // si la respuesta es exitosa, inicia la sesión del usuario, guarda sus
-            // datos en el estado y lo dirige a /my-perfil.
-            setIsLoggedIn(true);
-            setUserData({ username, email });
-          })
-          .catch(console.error);
-  
+
+    getUserInfoAuth();
     getUserData();
     getInitialCardsData();
     
-  }, []);
+  }, []);  
 
   async function handleCardLike(card) {
     const isLiked = card.isLiked;
@@ -85,43 +85,33 @@ function App() {
     }).catch((error) => console.error(error));
   }
 
-    const handleRegistration = ({
-      email,
-      password
-    }) => {
-        auth.register( password, email)
-         .then(() => {
-          setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
-          navigate("/login");
-          })
-          .catch(() => {console.error; setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse});});
-    };
+  const handleRegistration = async ({ email, password }) => {
+    try {
+      await auth.register(email, password);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-      const handleLogin = ({ email, password }) => {
-        if (!email || !password) {
-          return;
-        }
-    
-        auth
-          .authorize(email, password)
-          .then((data) => {
-            // Verifica que se incluyó un jwt antes de iniciar la sesión del usuario.
-            if (data.jwt) {
-              setToken(data.jwt);      // guardar el jwt en localStorage
-              setUserData(data.user);  // guardar los datos de usuario en el estado
-              setIsLoggedIn(true);     // inicia la sesión del usuario
-              navigate("/my-perfil");      // enviarlo a /my-perfil
-             // Después de iniciar sesión, en lugar de navegar todo el tiempo a /my-perfil,
-            // navega a la ubicación que se almacena en state. Si
-            // no hay ubicación almacenada, por defecto
-            // redirigimos a /my-perfil.
-            const redirectPath = location.state?.from?.pathname || "/my-perfil";
-            setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
-            navigate(redirectPath);
-            }
-          })
-          .catch(() => {console.error; setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse});});
-      };
+  const handleLogin = async ({ email, password }) => {
+    if (!email || !password) {
+      return;
+    }
+
+    try {
+      const data = await auth.authorize(email, password);
+      if (data.token) {
+        setToken(data.token);
+        setIsLoggedIn(true);
+        setUserData({ email });
+        const redirectPath = location.state?.from?.pathname || "/my-perfil";
+        navigate(redirectPath);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   async function handleCardDelete(cardId) {
     try {
@@ -185,7 +175,8 @@ function App() {
       handleUpdateUser,
       handleUpdateAvatar,
       handleAddPlaceSubmit,
-      isLoading, disabled,
+      isLoading,
+      disabled,
       setDisabled,
       userData,
       setIsLoggedIn,
