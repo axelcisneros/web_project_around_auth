@@ -6,6 +6,7 @@ import Footer from './Footer/Footer.jsx';
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.jsx";
 import Login from './Login/Login.jsx';
 import Register from './Register/Register.jsx';
+import InfoTooltip from "./InfoTooltip/InfoTooltip";
 import api from '@utils/api.js';
 import * as auth from '@utils/auth.js';
 import { setToken, getToken } from '@utils/token.js';
@@ -46,10 +47,12 @@ function App() {
       
       try {
       const { data } = await auth.getUserInfoAuth(jwt);
+      setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
       setUserData({ email: data.email });
       setIsLoggedIn(true);
       } catch (error) {
-      console.error(error);
+        setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse});
+        console.error(error);
       }
     };
 
@@ -89,7 +92,9 @@ function App() {
     try {
       await auth.register(email, password);
       navigate("/login");
+      setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
     } catch (error) {
+      setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse})
       console.error(error);
     }
   };
@@ -105,10 +110,12 @@ function App() {
         setToken(data.token);
         setIsLoggedIn(true);
         setUserData({ email });
+        setMessagePopup({message: messages.registerTrue, link: trueImg, linkalt: messages.linkaltTrue});
         const redirectPath = location.state?.from?.pathname || "/my-perfil";
         navigate(redirectPath);
       }
     } catch (error) {
+      setMessagePopup({message: messages.registerFalse, link: falseImg, linkalt: messages.linkaltFalse})
       console.error(error);
     }
   };
@@ -167,6 +174,10 @@ function App() {
       });
     })();
   };
+
+  function handleMessagePopup() {
+    handleOpenPopup({ children: <InfoTooltip /> });
+}
   
 
   return (
@@ -184,7 +195,8 @@ function App() {
       popup,
       handleOpenPopup,
       handleClosePopup,
-      messagePopup,
+      handleMessagePopup,
+      messagePopup
       }}>
       <div className='page'>
         <Header />

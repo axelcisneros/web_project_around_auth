@@ -3,7 +3,6 @@ import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import errorMessages from "@utils/errorMessages";
 import Popup from "../Main/components/Popup/Popup";
-import InfoTooltip from "../InfoTooltip/InfoTooltip";
 import CurrentUserContext from '@contexts/CurrentUserContext.js';
 
 const Register = ({ handleRegistration }) => {
@@ -25,11 +24,7 @@ const Register = ({ handleRegistration }) => {
     mode: "onChange",
   });
 
-  const { popup, handleOpenPopup, handleClosePopup, messagePopup } = useContext(CurrentUserContext);
-
-    function handleCardClick() {
-        handleOpenPopup({ children: <InfoTooltip messages={messagePopup}/> });
-    }
+  const { popup, handleMessagePopup, handleClosePopup } = useContext(CurrentUserContext);
 
   useEffect(() => {
     trigger();
@@ -86,7 +81,7 @@ const Register = ({ handleRegistration }) => {
   };
 
   const onSubmit = (data) => {
-    handleCardClick();
+    handleMessagePopup();
     handleRegistration(data);
   };
 

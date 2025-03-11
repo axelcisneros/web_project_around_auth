@@ -3,7 +3,6 @@ import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import errorMessages from "@utils/errorMessages";
 import Popup from "../Main/components/Popup/Popup";
-import InfoTooltip from "../InfoTooltip/InfoTooltip";
 import CurrentUserContext from '@contexts/CurrentUserContext.js';
 
 const Login = ({ handleLogin }) => {
@@ -26,11 +25,7 @@ const Login = ({ handleLogin }) => {
     mode: "onChange",
   });
 
-    const { popup, handleOpenPopup, handleClosePopup, messagePopup } = useContext(CurrentUserContext);
-  
-      function handleloginSubmit() {
-          handleOpenPopup({ children: <InfoTooltip messages={messagePopup}/> });
-      }
+    const { popup, handleMessagePopup, handleClosePopup } = useContext(CurrentUserContext);
 
   useEffect(() => {
     trigger(); // Ejecutar validaciones iniciales al cargar
@@ -89,7 +84,7 @@ const Login = ({ handleLogin }) => {
   };
 
   const onSubmit = (data) => {
-    handleloginSubmit();
+    handleMessagePopup();
     handleLogin(data); // Procesar inicio de sesión
   };
 
